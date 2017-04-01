@@ -2,7 +2,7 @@
 
 Preview your HTML file with localhost server live-reloading enabled.
 
-![](./doc/img/preview.gif)
+![Preview](./doc/img/preview.gif)
 
 ## Usage
 
