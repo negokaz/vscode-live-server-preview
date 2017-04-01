@@ -2,6 +2,8 @@
 
 Preview your HTML file with localhost server live-reloading enabled.
 
+![](./doc/img/preview.gif)
+
 ## Usage
 
 * press 'F1' and type "Show Live Server Preview"
