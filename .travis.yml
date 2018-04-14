@@ -1,0 +1,28 @@
+language: node_js
+node_js:
+- 9
+os: osx
+cache:
+  directories:
+  - node_modules
+script:
+- vsce package
+deploy:
+- provider: releases
+  api_key:
+    secure: c4FrNn7kYNdMAV8fn8mtQtaWJ1xpi92fXaQi31POKx0cTNAnoencjTKMMYQ5CWbZQRNfnBCrV7XeuUa6xh04EkVNNajqbAolZREMha3j2MV6ljbNhZ4mst3vTD4ySL7Uj5JZEllmr9wIrrb0phawzZdN0lHzYTKLYDM3FSH5kvLFV8oIw5pPsgttDXI2g2yi/HRsyn3Z/TS+i5m76NED/FzCbacGpWGDSX32Xgis6Y5WxUBHx74KJC5PZKDeAqjHZeq5k8HGnsVT9bwT2ehl6JmeI009Zigb/qbJSm+Mx6SvmwEqPL5hhWaOUDOcTJ9QcSwxdtENXBzO2BdnJ6v9cVBvtuRkIxDGExHKdrUSzbdqwaXvPLg/Nv42qL6AG+SLtd5H9iQHTRqPNmkRWyqKeBIWb8KkfqBLMTKr2mAcD7hrHdCHgySJ2wriu4Q0F0UVd9+umSnAFiupAdC0mWHkLXxFRM4LLypML/P6ObVfligock82TRbxRukyXS8Mc8B8Pvu0MGCPs8j5sx+9b99i9LYCTlewAd0PS7yCJEPPAbNL+CsMJ5pSEw5JN2tPVSGqG2T/aqABo8OGKsZaHw4g49zcWApkVacCUonFJ34XDgBV8Dso2Yrd62SBpaXOFo6lyVL4KHzonfvIbtfZ1CZ/tcDK5WqpqZ20jWDFiYt3KZM=
+  file_glob: true
+  file: "*.vsix"
+  skip_cleanup: true
+  on:
+    repo: negokaz/vscode-live-server-preview
+    tags: true
+- provider: script
+  script: vsce publish $TRAVIS_TAG -p $VS_TOKEN
+  skip_cleanup: true
+  on:
+    repo: negokaz/vscode-live-server-preview
+    tags: true
+env:
+  global:
+    secure: UKqx7TE1FxVIxiZIox+exB4MLUjLUe1Ei/tAomzf+6CjoLORLSvpcPlnQvOBZI7gkUunBf30qL0JivhuCq8cRDWJOMJfpexjENzXw+sBTz+VsUTXzdwc5Xpjso8mtWpTdm85T/nXM9r84ftuWKzRgE4YrhFFbhlX6fHVWRPwOAEoV2xK7jVEfyioZNj3VkVdIIzN127A0XCGqZr9PJHHg53BIGulXfAF9WNpM1uFTwOaATGSzV3tqDeENYA0tEbU/QuSzKipA8OQdfSzHoLcIcFlbteXQ3CklJPpYyTeBRX6OfTSUJWCKd+5Wsg7Q4dSj7r1HslQZWlAFLlNsAfJorRAlNtnTNK7neoCq6Dt3nNzIb4ajEUbiuwQz6hxtxP1oIO4fMQutjDwPUSnPwRVQ8N8L1bSCpZrddHQqbZcbEHbU1ZdXQqLRrN4F+J+k0bibMLDwjMwz7ltxoIJgzKm+R5UnQ6tNp/+el77BMtip3Xemv/bSkCehpR1+E74cRpDgyxhkStWWNfmRCmCy0K3DeT8kGSoErbhlfajHe6G15qplL1mnXOzumqIJcmcJUX6PJ0V8gnLAry0fyItC40LeaJI5tT24pgCHxpOabBdDpjnm8XaTyVUzoVHhXh9CxoMznrz9+KDPPWjs+6wCY7a76rKXSTZMesR5EXUQA0wKTU=
