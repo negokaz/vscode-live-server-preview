@@ -47,7 +47,7 @@ function livePreview(textEditor: vscode.TextEditor) {
 }
 
 function isEditingHTML(document: vscode.TextDocument) {
-    return document.languageId.toLowerCase() == 'html';
+    return document.languageId.toLowerCase() == 'html' || document.fileName.match(/\.html$/);
 }
 
 // this method is called when your extension is deactivated
