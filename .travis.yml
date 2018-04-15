@@ -6,7 +6,7 @@ cache:
   directories:
   - node_modules
 script:
-- vsce package
+- vsce package $TRAVIS_TAG
 deploy:
 - provider: releases
   api_key:
