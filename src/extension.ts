@@ -3,6 +3,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as liveServer from 'live-server';
+import * as path from 'path';
 import LiveServerContentProvider from './LiveServerContentProvider';
 
 // this method is called when your extension is activated
@@ -23,10 +24,13 @@ function livePreview(textEditor: vscode.TextEditor) {
     const workspacePath = 
         vscode.workspace.rootPath;
     const documentPath = 
-        textEditor.document.uri.path.substr(0, textEditor.document.uri.path.lastIndexOf('/'));
+        textEditor.document.uri.fsPath;
 
-    // /some/dir
-    const rootPath = workspacePath ? workspacePath : documentPath;
+    const rootPath =
+        // workspace is available and it has the document
+        (workspacePath && documentPath.startsWith(workspacePath))
+            ? workspacePath 
+            : path.dirname(documentPath);
 
     liveServer.start({
         port: 0, // random port
@@ -36,8 +40,7 @@ function livePreview(textEditor: vscode.TextEditor) {
     });
 
     // some/file.html
-    const relativePath =
-        textEditor.document.uri.path.substr(rootPath.length + 1);
+    const relativePath = documentPath.substr(rootPath.length + 1);
     const previewUri =
         vscode.Uri.parse(`LiveServerPreview://authority/${relativePath}`);
 

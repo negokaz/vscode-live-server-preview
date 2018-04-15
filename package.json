@@ -2,7 +2,7 @@
     "name": "live-server-preview",
     "displayName": "Live Server Preview",
     "description": "Preview your HTML file with localhost server live-reloading enabled",
-    "version": "0.0.4",
+    "version": "0.1.1",
     "publisher": "negokaz",
     "engines": {
         "vscode": "^1.10.0"
@@ -56,6 +56,7 @@
     },
     "dependencies": {
         "fsevents": "^1.1.3",
-        "live-server": "^1.2.0"
+        "live-server": "^1.2.0",
+        "path": "^0.12.7"
     }
 }
