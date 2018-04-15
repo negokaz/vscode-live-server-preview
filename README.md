@@ -1,6 +1,6 @@
 # Live Server Preview
 
-[![build](https://api.travis-ci.org/negokaz/vscode-live-server-preview.svg)](https://travis-ci.org/negokaz/vscode-live-server-preview) [![release](https://img.shields.io/github/release/negokaz/vscode-live-server-preview.svg)](https://github.com/negokaz/vscode-live-server-preview/releases/latest) 
+[![build](https://api.travis-ci.org/negokaz/vscode-live-server-preview.svg)](https://travis-ci.org/negokaz/vscode-live-server-preview) [![release](https://img.shields.io/vscode-marketplace/v/negokaz.live-server-preview.svg)](https://marketplace.visualstudio.com/items?itemName=negokaz.live-server-preview) [![downloads](https://img.shields.io/vscode-marketplace/d/negokaz.live-server-preview.svg)](https://marketplace.visualstudio.com/items?itemName=negokaz.live-server-preview)
 
 Preview your HTML file with localhost server live-reloading enabled.
 
