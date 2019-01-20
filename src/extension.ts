@@ -4,49 +4,64 @@
 import * as vscode from 'vscode';
 import * as liveServer from 'live-server';
 import * as path from 'path';
-import LiveServerContentProvider from './LiveServerContentProvider';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    vscode.workspace.registerTextDocumentContentProvider('LiveServerPreview', new LiveServerContentProvider());
-    let disposablePreview = vscode.commands.registerTextEditorCommand('extension.liveServerPreview.open', livePreview);
+    let disposablePreview = vscode.commands.registerTextEditorCommand('extension.liveServerPreview.open', livePreview(context));
     context.subscriptions.push(disposablePreview);
 }
 
-function livePreview(textEditor: vscode.TextEditor) {
+function livePreview(context: vscode.ExtensionContext) {
 
-    if (!isEditingHTML(textEditor.document)) {
-        vscode.window.showErrorMessage('Live Server Preview can preview only HTML file');
-        return;
-    }
+    return (textEditor: vscode.TextEditor) => {
 
-    const workspacePath = 
-        vscode.workspace.rootPath;
-    const documentPath = 
-        textEditor.document.uri.fsPath;
+        if (!isEditingHTML(textEditor.document)) {
+            vscode.window.showErrorMessage('Live Server Preview can preview only HTML file');
+            return;
+        }
 
-    const rootPath =
-        // workspace is available and it has the document
-        (workspacePath && documentPath.startsWith(workspacePath))
-            ? workspacePath 
-            : path.dirname(documentPath);
+        const workspacePath = 
+            vscode.workspace.rootPath;
+        const documentPath = 
+            textEditor.document.uri.fsPath;
 
-    liveServer.start({
-        port: 0, // random port
-        host: '127.0.0.1',
-        root: rootPath,
-        open: false
-    });
+        const rootPath =
+            // workspace is available and it has the document
+            (workspacePath && documentPath.startsWith(workspacePath))
+                ? workspacePath 
+                : path.dirname(documentPath);
 
-    // some/file.html
-    const relativePath = documentPath.substr(rootPath.length + 1);
-    const previewUri =
-        vscode.Uri.parse(`LiveServerPreview://authority/${relativePath}`);
+        const server = liveServer.start({
+            port: 0, // random port
+            host: '127.0.0.1',
+            root: rootPath,
+            open: false
+        });
 
-    vscode.commands
-            .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
-            .then(s => console.log('done'), vscode.window.showErrorMessage);
+        // some/file.html
+        const relativePath = documentPath.substr(rootPath.length + 1);
+        
+        const panel = vscode.window.createWebviewPanel(
+            'extension.liveServerPreview',
+            relativePath,
+            vscode.ViewColumn.Two,
+            {
+                enableScripts: true
+            }
+        );
+        server.addListener('listening', () => {
+            panel.webview.html = provideContent(server, relativePath);
+        });
+        panel.onDidDispose(
+            () => {
+                console.log("shutdowning live-server...");
+                server.shutdown();
+            },
+            null,
+            context.subscriptions
+        );
+    };
 }
 
 function isEditingHTML(document: vscode.TextDocument) {
@@ -55,5 +70,31 @@ function isEditingHTML(document: vscode.TextDocument) {
 
 // this method is called when your extension is deactivated
 export function deactivate() {
-    liveServer.shutdown();
+    console.log("deactivated")
+}
+
+function provideContent(server: any, relativePath: string): string {
+    const port = server.address().port;
+    return `
+        <html>
+            <header>
+                <style>
+                    body, html, div {
+                        margin: 0;
+                        padding: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                        background-color: #fff;
+                    }
+                </style>
+            </header>
+            <body>
+                <div>
+                    <iframe src="http://127.0.0.1:${port}/${relativePath}" width="100%" height="100%" seamless frameborder=0>
+                    </iframe>
+                </div>
+            </body>
+        </html>
+    `;
 }
